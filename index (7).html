@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROJECT FAZWA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05070a;
+    --surface:#0c1119;
+    --surface-2:#111826;
+    --line:#1f2937;
+    --line-soft:#182231;
+    --text:#e7ecf2;
+    --muted:#7b8798;
+    --muted-2:#4b5666;
+    --red:#ff4438;
+    --red-dim:#7a1f1b;
+    --cyan:#39e6e0;
+    --cyan-dim:#123936;
+    --amber:#ffb648;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{ background:var(--bg); color:var(--text); font-family:'Inter', sans-serif; overflow-x:hidden; }
+  ::selection{ background:var(--red); color:#05070a; }
+
+  .grid-bg{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image: linear-gradient(var(--line-soft) 1px, transparent 1px), linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size: 64px 64px; opacity:.35;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 20%, black 40%, transparent 100%);
+  }
+  .noise-glow{
+    position:fixed; top:-20%; left:50%; transform:translateX(-50%);
+    width:1200px; height:800px; z-index:0; pointer-events:none;
+    background: radial-gradient(circle, rgba(57,230,224,.10) 0%, rgba(57,230,224,0) 60%);
+  }
+
+  /* ---------- boot screen ---------- */
+  .boot-screen{
+    position:fixed; inset:0; z-index:200; background:var(--bg);
+    display:flex; flex-direction:column; align-items:flex-start; justify-content:center;
+    padding-left:9vw; font-family:'IBM Plex Mono', monospace;
+    transition:opacity .45s ease, visibility .45s ease;
+  }
+  .boot-screen.hide{ opacity:0; visibility:hidden; pointer-events:none; }
+  .boot-line{ font-size:12.5px; letter-spacing:.1em; color:var(--muted-2); margin:3px 0; opacity:0; animation:bootIn .3s forwards; }
+  .boot-line b{ color:var(--cyan); }
+  .boot-line:nth-child(1){ animation-delay:.05s; }
+  .boot-line:nth-child(2){ animation-delay:.25s; }
+  .boot-line:nth-child(3){ animation-delay:.45s; }
+  .boot-line:nth-child(4){ animation-delay:.6s; }
+  .boot-line:nth-child(5){ animation-delay:.75s; }
+  @keyframes bootIn{ to{ opacity:1; } }
+  .boot-bar-wrap{ width:min(280px,50vw); height:5px; background:var(--surface-2); border:1px solid var(--line); margin:16px 0 14px; overflow:hidden; }
+  .boot-bar{ height:100%; width:0%; background:var(--cyan); box-shadow:0 0 10px var(--cyan); transition:width 1s linear; }
+  .boot-welcome{ font-family:'Orbitron', sans-serif; font-weight:800; font-size:clamp(22px,4vw,32px); color:var(--text); opacity:0; transition:opacity .3s; }
+  .boot-welcome span{ color:var(--red); }
+  .boot-welcome.show{ opacity:1; }
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between; padding:18px 28px;
+    background:linear-gradient(180deg, rgba(5,7,10,.9), rgba(5,7,10,0)); backdrop-filter:blur(2px);
+  }
+  .nav-id{ font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.12em; color:var(--muted); display:flex; align-items:center; gap:8px; }
+  .nav-id .dot{ width:7px; height:7px; border-radius:50%; background:var(--red); box-shadow:0 0 8px var(--red); animation:blink 2.4s infinite; }
+  @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.25;} }
+  .nav-link{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:.08em; color:var(--muted); text-decoration:none; border:1px solid var(--line); padding:7px 12px; transition:.2s; white-space:nowrap; }
+  .nav-link:hover{ color:var(--cyan); border-color:var(--cyan-dim); }
+  .nav-links{ display:none; gap:8px; }
+  @media(min-width:900px){ .nav-links{ display:flex; } }
+
+  /* ---------- hero ---------- */
+  .hero{ position:relative; z-index:1; min-height:100svh; display:flex; flex-direction:column; justify-content:center; padding:120px 8vw 100px; }
+  .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.25em; color:var(--cyan); display:flex; align-items:center; gap:12px; margin-bottom:22px; }
+  .eyebrow::before{ content:''; width:26px; height:1px; background:var(--cyan); }
+  h1.title{ font-family:'Orbitron', sans-serif; font-weight:800; font-size:clamp(48px, 10vw, 128px); line-height:.95; letter-spacing:-.01em; color:var(--text); text-shadow: 0 0 40px rgba(57,230,224,.15); }
+  h1.title span{ color:var(--red); text-shadow:0 0 40px rgba(255,68,56,.25); }
+  .subhead{ font-family:'Rajdhani', sans-serif; font-weight:600; font-size:clamp(15px, 2vw, 20px); color:var(--muted); max-width:560px; margin-top:22px; letter-spacing:.02em; }
+
+  .id-card{ margin-top:56px; border:1px solid var(--line); background:linear-gradient(180deg, var(--surface), var(--bg)); max-width:620px; position:relative; }
+  .id-card::before{ content:''; position:absolute; top:-1px; left:-1px; width:18px; height:18px; border-top:2px solid var(--cyan); border-left:2px solid var(--cyan); }
+  .id-card::after{ content:''; position:absolute; bottom:-1px; right:-1px; width:18px; height:18px; border-bottom:2px solid var(--cyan); border-right:2px solid var(--cyan); }
+  .id-card-head{ display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-bottom:1px solid var(--line); font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.15em; color:var(--muted-2); }
+  .id-card-head b{ color:var(--red); }
+  .id-rows{ padding:6px 0; }
+  .id-row{ display:grid; grid-template-columns:120px 1fr; gap:12px; padding:14px 20px; border-bottom:1px solid var(--line-soft); }
+  .id-row:last-child{ border-bottom:none; }
+  .id-label{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.12em; color:var(--muted-2); align-self:center; }
+  .id-value{ font-family:'Rajdhani', sans-serif; font-weight:600; font-size:18px; color:var(--text); align-self:center; word-break:break-word;}
+  .id-value a{ color:var(--cyan); text-decoration:none; }
+  .id-value a:hover{ text-decoration:underline; }
+
+  .scroll-cue{ margin-top:70px; display:flex; align-items:center; gap:10px; font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.2em; color:var(--muted-2); }
+  .scroll-cue .bar{ width:1px; height:34px; background:linear-gradient(var(--cyan), transparent); animation:dropdown 1.6s infinite; }
+  @keyframes dropdown{ 0%{opacity:0; transform:translateY(-6px);} 40%{opacity:1;} 100%{opacity:0; transform:translateY(10px);} }
+
+  /* ---------- section shell ---------- */
+  section{ position:relative; z-index:1; padding:110px 8vw; }
+  .section-head{ margin-bottom:56px; }
+  .section-head h2{ font-family:'Orbitron', sans-serif; font-weight:700; font-size:clamp(28px, 4.4vw, 52px); letter-spacing:-.01em; }
+  .section-head .eyebrow{ margin-bottom:16px; }
+  .section-num{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--red); letter-spacing:.15em; }
+
+  .block-label{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.18em; color:var(--red); margin-bottom:16px; display:flex; align-items:center; gap:10px; }
+  .block-label::after{ content:''; flex:1; height:1px; background:var(--line); }
+
+  /* ---------- narrative / story blocks ---------- */
+  .story{ max-width:780px; }
+  .story p{ font-family:'Rajdhani', sans-serif; font-weight:500; font-size:17px; line-height:1.8; color:var(--muted); margin-bottom:18px; }
+  .story p b{ color:var(--text); font-weight:700; }
+  .story .quote{ border-left:2px solid var(--red); padding:4px 0 4px 20px; font-family:'Rajdhani', sans-serif; font-weight:700; font-size:19px; color:var(--text); margin:30px 0; }
+  .story h4{ font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.15em; color:var(--cyan); margin:34px 0 12px; }
+
+  .tag-pills{ display:flex; flex-wrap:wrap; gap:10px; margin-top:30px; }
+  .tag-pill{ font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.06em; color:var(--cyan); border:1px solid var(--cyan-dim); background:rgba(18,57,54,.25); padding:9px 15px; }
+
+  .final-line{ margin-top:56px; padding-top:40px; border-top:1px solid var(--line); }
+  .final-line .big{ font-family:'Orbitron', sans-serif; font-weight:800; font-size:clamp(24px,4vw,38px); line-height:1.25; max-width:720px; }
+  .final-line .tag{ margin-top:18px; font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.2em; color:var(--muted-2); }
+
+  /* ---------- motivation ---------- */
+  .motiv-card{ max-width:680px; border-left:2px solid var(--red); padding:6px 0 6px 28px; }
+  .motiv-card p{ font-family:'Rajdhani', sans-serif; font-weight:600; font-size:20px; line-height:1.7; color:var(--text); margin-bottom:16px; }
+  .motiv-tag{ margin-top:20px; font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.2em; color:var(--muted-2); }
+
+  /* ---------- what is fazwa ---------- */
+  .fazwa-mark{ font-family:'Orbitron', sans-serif; font-weight:900; font-size:clamp(46px,9vw,110px); letter-spacing:-.01em; margin-top:20px; }
+  .fazwa-mark span{ color:var(--cyan); text-shadow:0 0 40px rgba(57,230,224,.3); }
+  .fazwa-loop{ font-family:'IBM Plex Mono', monospace; font-size:13px; letter-spacing:.25em; color:var(--red); margin-top:14px; }
+
+  /* ---------- project archive grid ---------- */
+  .archive-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); }
+  .archive-item{ background:var(--surface); padding:24px 22px; transition:.2s; }
+  .archive-item.active{ background:var(--surface-2); border-left:2px solid var(--cyan); }
+  .archive-item .num{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--muted-2); letter-spacing:.1em; }
+  .archive-item .name{ font-family:'Rajdhani', sans-serif; font-weight:700; font-size:19px; color:var(--text); margin-top:8px; }
+  .archive-item .tag{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--muted-2); margin-top:8px; letter-spacing:.08em; }
+  .archive-item.active .tag{ color:var(--cyan); }
+
+  /* ---------- project card (welcome robot) ---------- */
+  .project-card{ border:1px solid var(--line); background:var(--surface); position:relative; }
+  .project-top{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; padding:22px 28px; border-bottom:1px solid var(--line); }
+  .proj-code{ font-family:'Orbitron', sans-serif; font-weight:800; font-size:22px; color:var(--red); letter-spacing:.02em; }
+  .proj-name{ font-family:'Rajdhani', sans-serif; font-weight:700; font-size:22px; color:var(--text); margin-left:14px; }
+  .status-pill{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.15em; color:var(--cyan); border:1px solid var(--cyan-dim); padding:6px 12px; display:flex; align-items:center; gap:8px; }
+  .status-pill .dot{ width:6px; height:6px; border-radius:50%; background:var(--cyan); box-shadow:0 0 8px var(--cyan); }
+
+  .viewer-wrap{ position:relative; background:#03050a; border-bottom:1px solid var(--line); height:460px; }
+  #robot3d{ width:100%; height:100%; display:block; touch-action:none; }
+  .viewer-toolbar{ position:absolute; top:16px; left:16px; z-index:5; display:flex; gap:8px; }
+  .rev-btn{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.1em; color:var(--muted); background:rgba(12,17,25,.85); border:1px solid var(--line); padding:9px 13px; cursor:pointer; transition:.2s; }
+  .rev-btn:hover{ color:var(--text); border-color:var(--muted-2); }
+  .rev-btn.active{ color:var(--cyan); border-color:var(--cyan-dim); background:rgba(18,57,54,.35); }
+  .viewer-hint{ position:absolute; bottom:16px; right:18px; z-index:5; font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:.12em; color:var(--muted-2); pointer-events:none; }
+  .viewer-loading{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.15em; color:var(--muted-2); z-index:4; transition:opacity .4s; }
+  @media(max-width:600px){ .viewer-wrap{ height:360px; } }
+
+  .proj-body{ padding:30px 28px 34px; }
+  .proj-desc{ font-family:'Rajdhani', sans-serif; font-weight:500; font-size:17px; line-height:1.65; color:var(--muted); max-width:800px; margin-bottom:34px; }
+  .proj-desc b{ color:var(--text); font-weight:700; }
+
+  .spec-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:1px; background:var(--line); margin-bottom:34px; border:1px solid var(--line); }
+  .spec-cell{ background:var(--surface-2); padding:16px 18px; }
+  .spec-cell .k{ font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:.12em; color:var(--muted-2); }
+  .spec-cell .v{ font-family:'Rajdhani', sans-serif; font-weight:700; font-size:19px; color:var(--cyan); margin-top:4px; }
+
+  .col2{ display:grid; grid-template-columns:1fr 1fr; gap:40px; }
+  @media(max-width:760px){ .col2{ grid-template-columns:1fr; } }
+
+  ul.feature-list{ list-style:none; }
+  ul.feature-list li{ font-family:'Rajdhani', sans-serif; font-weight:600; font-size:15.5px; color:var(--text); padding:11px 0; border-bottom:1px solid var(--line-soft); display:flex; gap:12px; }
+  ul.feature-list li:last-child{ border-bottom:none; }
+  ul.feature-list li::before{ content:'▸'; color:var(--cyan); }
+
+  ul.parts-list{ list-style:none; columns:2; column-gap:24px; }
+  @media(max-width:520px){ ul.parts-list{ columns:1; } }
+  ul.parts-list li{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--muted); padding:8px 0; border-bottom:1px dashed var(--line-soft); }
+
+  .btn-map{ display:flex; gap:1px; background:var(--line); margin-top:34px; border:1px solid var(--line); }
+  .btn-cell{ flex:1; background:var(--surface-2); padding:16px 18px; }
+  .btn-cell .k{ font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:.12em; color:var(--muted-2); }
+  .btn-cell .v{ font-family:'Rajdhani', sans-serif; font-weight:700; font-size:16px; color:var(--text); margin-top:6px; }
+  .btn-cell.a .v{ color:var(--red); }
+  .btn-cell.b .v{ color:var(--cyan); }
+
+  .build-flow{ display:flex; flex-wrap:wrap; gap:10px; margin-top:36px; align-items:center; }
+  .build-flow .step{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:.1em; color:var(--text); border:1px solid var(--line); padding:9px 14px; }
+  .build-flow .arrow{ color:var(--red); font-family:'IBM Plex Mono', monospace; }
+
+  /* ---------- ideas from sensei ---------- */
+  .sensei-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:36px; }
+  .sensei-cell{ background:var(--surface); padding:20px 18px; }
+  .sensei-cell .k{ font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:.1em; color:var(--red); }
+  .sensei-cell .v{ font-family:'Rajdhani', sans-serif; font-weight:700; font-size:16px; color:var(--text); margin-top:8px; }
+  .sensei-foot{ margin-top:26px; font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.1em; color:var(--muted-2); }
+
+  /* ---------- build journal timeline ---------- */
+  .timeline{ position:relative; padding-left:34px; max-width:520px; }
+  .timeline::before{ content:''; position:absolute; left:6px; top:6px; bottom:6px; width:1px; background:var(--line); }
+  .tl-item{ position:relative; padding-bottom:32px; }
+  .tl-item:last-child{ padding-bottom:0; }
+  .tl-item::before{ content:''; position:absolute; left:-34px; top:3px; width:11px; height:11px; border-radius:50%; background:var(--bg); border:2px solid var(--cyan); }
+  .tl-item.expo::before{ border-color:var(--red); background:var(--red); box-shadow:0 0 10px var(--red); }
+  .tl-item .day{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.14em; color:var(--red); }
+  .tl-item .desc{ font-family:'Rajdhani', sans-serif; font-weight:700; font-size:18px; color:var(--text); margin-top:4px; }
+
+  /* ---------- stats ---------- */
+  .stat-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); }
+  .stat-cell{ background:var(--surface-2); padding:28px 22px; }
+  .stat-cell .num{ font-family:'Orbitron', sans-serif; font-weight:800; font-size:36px; color:var(--cyan); }
+  .stat-cell.curiosity .num{ color:var(--red); }
+  .stat-cell .lbl{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.12em; color:var(--muted-2); margin-top:10px; }
+
+  /* ---------- rating ---------- */
+  .rate-card{ border:1px solid var(--line); background:var(--surface); max-width:620px; position:relative; }
+  .rate-card::before{ content:''; position:absolute; top:-1px; left:-1px; width:18px; height:18px; border-top:2px solid var(--red); border-left:2px solid var(--red); }
+  .rate-card::after{ content:''; position:absolute; bottom:-1px; right:-1px; width:18px; height:18px; border-bottom:2px solid var(--red); border-right:2px solid var(--red); }
+  .rate-head{ padding:14px 20px; border-bottom:1px solid var(--line); font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.15em; color:var(--muted-2); }
+  .rate-head b{ color:var(--cyan); }
+  .rate-body{ padding:26px 20px 28px; }
+  .star-picker{ display:flex; flex-direction:row-reverse; justify-content:flex-end; gap:6px; margin-bottom:22px; }
+  .star-btn{ background:none; border:none; cursor:pointer; padding:0; font-size:34px; line-height:1; color:#2a3140; transition:color .15s, transform .15s; }
+  .star-btn:hover, .star-btn:hover ~ .star-btn{ color:var(--amber); transform:scale(1.08); }
+  .star-btn.filled{ color:var(--amber); text-shadow:0 0 12px rgba(255,182,72,.35); }
+  .rate-input, .rate-textarea{ width:100%; background:var(--bg); border:1px solid var(--line); color:var(--text); font-family:'Rajdhani', sans-serif; font-weight:600; font-size:16px; padding:13px 16px; margin-bottom:16px; outline:none; }
+  .rate-textarea{ min-height:110px; resize:vertical; font-family:'Rajdhani', sans-serif; }
+  .rate-input::placeholder, .rate-textarea::placeholder{ color:var(--muted-2); font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.08em; }
+  .rate-input:focus, .rate-textarea:focus{ border-color:var(--cyan-dim); }
+  .rate-submit{ font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.15em; color:var(--bg); background:var(--cyan); border:none; padding:13px 22px; cursor:pointer; transition:.2s; }
+  .rate-submit:hover{ background:#7ff0eb; }
+  .rate-submit:disabled{ background:var(--muted-2); cursor:not-allowed; }
+  .rate-msg{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:.06em; margin-top:14px; min-height:16px; }
+  .rate-msg.ok{ color:var(--cyan); }
+  .rate-msg.err{ color:var(--red); }
+  .rating-list-box{ border:1px solid var(--line); background:var(--surface); max-width:620px; margin-top:26px; }
+  .rating-list-head{ padding:14px 20px; border-bottom:1px solid var(--line); font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.15em; color:var(--muted-2); display:flex; justify-content:space-between; }
+  .rating-list{ max-height:320px; overflow-y:auto; }
+  .rating-item{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 20px; border-bottom:1px solid var(--line-soft); }
+  .rating-item:last-child{ border-bottom:none; }
+  .rating-item .name{ font-family:'Rajdhani', sans-serif; font-weight:700; font-size:16px; color:var(--text); }
+  .rating-item .stars{ color:var(--amber); font-size:15px; letter-spacing:2px; white-space:nowrap; }
+  .rating-empty{ padding:24px 20px; font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--muted-2); letter-spacing:.06em; }
+
+  /* ---------- contact ---------- */
+  .contact-grid{ display:grid; grid-template-columns:1.15fr .85fr; gap:1px; background:var(--line); border:1px solid var(--line); }
+  @media(max-width:760px){ .contact-grid{ grid-template-columns:1fr; } }
+  .contact-form-box{ background:var(--surface); padding:30px; }
+  .contact-info-box{ background:var(--surface-2); padding:30px; display:flex; flex-direction:column; justify-content:space-between; }
+  .contact-info-box .id-row{ padding:16px 0; }
+  .contact-note{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.06em; color:var(--muted-2); line-height:1.7; margin-top:24px; }
+
+  /* ---------- footer ---------- */
+  footer{ position:relative; z-index:1; padding:70px 8vw 220px; border-top:1px solid var(--line); }
+  footer .foot-title{ font-family:'Orbitron', sans-serif; font-weight:800; font-size:clamp(20px,3vw,28px); color:var(--muted-2); letter-spacing:.05em; }
+  footer .foot-title span{ color:var(--cyan); }
+
+  /* ---------- walking robot mascot ---------- */
+  #robot-track{ position:fixed; left:0; right:0; bottom:0; height:118px; z-index:40; pointer-events:none; border-top:1px solid var(--line-soft); background:linear-gradient(0deg, rgba(5,7,10,.92), rgba(5,7,10,0)); }
+  #robot-track .rail{ position:absolute; left:0; right:0; bottom:34px; height:1px; background:repeating-linear-gradient(90deg, var(--line) 0 8px, transparent 8px 16px); }
+  #robo{ position:absolute; bottom:20px; left:0; width:64px; height:78px; transform:translateX(0); will-change:transform; }
+  #robo .flip{ transition: transform .25s ease; transform-origin:50% 90%; }
+  #robo.face-left .flip{ transform:scaleX(-1); }
+  #robo .shadow{ position:absolute; bottom:-2px; left:8px; width:48px; height:8px; background:radial-gradient(ellipse, rgba(0,0,0,.55), transparent 70%); }
+  #robo .head{ position:absolute; top:0; left:8px; width:48px; height:40px; background:#151b25; border-radius:14px; border:1px solid #232c3a; box-shadow: inset 0 -6px 10px rgba(0,0,0,.4); }
+  #robo .ear{ position:absolute; top:12px; width:9px; height:9px; border-radius:50%; background:var(--red); box-shadow:0 0 8px var(--red); }
+  #robo .ear.l{ left:-3px; } #robo .ear.r{ right:-3px; }
+  #robo .eye{ position:absolute; top:15px; width:11px; height:11px; border-radius:2px; background:var(--cyan); box-shadow:0 0 7px var(--cyan); animation:eyepulse 2.2s infinite; }
+  #robo .eye.l{ left:8px; } #robo .eye.r{ left:23px; }
+  @keyframes eyepulse{ 0%,100%{opacity:1;} 50%{opacity:.45;} }
+  #robo .neck{ position:absolute; top:38px; left:26px; width:8px; height:8px; background:#232c3a; }
+  #robo .body{ position:absolute; top:44px; left:14px; width:36px; height:26px; background:#12161f; border:1px solid #232c3a; border-radius:6px; }
+  #robo .leg{ position:absolute; top:68px; width:8px; height:12px; background:#1a2029; border-radius:2px; transform-origin:top center; }
+  #robo .leg.l{ left:16px; } #robo .leg.r{ left:40px; }
+  #robo.walking .leg.l{ animation:legL .34s infinite ease-in-out; }
+  #robo.walking .leg.r{ animation:legR .34s infinite ease-in-out; }
+  @keyframes legL{ 0%,100%{ transform:rotate(-16deg);} 50%{ transform:rotate(16deg);} }
+  @keyframes legR{ 0%,100%{ transform:rotate(16deg);} 50%{ transform:rotate(-16deg);} }
+  #robo .label{ position:absolute; top:-22px; left:50%; transform:translateX(-50%); font-family:'IBM Plex Mono', monospace; font-size:9px; letter-spacing:.1em; color:var(--muted-2); white-space:nowrap; opacity:0; transition:opacity .3s; }
+  #robo.walking .label{ opacity:1; }
+
+  /* ---------- mouse-tracking avatar ---------- */
+  #ariaBot{ position:fixed; top:16px; right:16px; z-index:60; width:64px; height:64px; border-radius:50%; overflow:hidden; background:#f2f2f2; border:2px solid var(--cyan-dim); box-shadow:0 6px 20px rgba(0,0,0,.55), 0 0 0 4px rgba(57,230,224,.10), 0 0 18px rgba(57,230,224,.25); pointer-events:none; }
+  @media(min-width:640px){ #ariaBot{ width:80px; height:80px; top:20px; right:20px; } }
+  #ariaBot::before{ content:''; position:absolute; inset:-2px; border-radius:50%; border:1px solid var(--cyan); opacity:.55;
+    -webkit-mask: conic-gradient(from 0deg, #000 0 25%, transparent 25% 50%, #000 50% 75%, transparent 75% 100%);
+            mask: conic-gradient(from 0deg, #000 0 25%, transparent 25% 50%, #000 50% 75%, transparent 75% 100%);
+    animation: aria-spin 5s linear infinite; }
+  @keyframes aria-spin{ to{ transform:rotate(360deg); } }
+  #ariaBot img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 22%; transform:scale(1.55); filter:contrast(1.05) saturate(.9); }
+  #ariaBot .pupil{ position:absolute; width:6px; height:6px; border-radius:50%; background:#0a0a0a; box-shadow:0 0 3px rgba(0,0,0,.8), inset 0 0 2px #000; transition:transform .06s linear; }
+  #ariaBot .pupil.l{ top:40%; left:33%; }
+  #ariaBot .pupil.r{ top:40%; left:58%; }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    #robo, #robo .leg, #robo .eye, .scroll-cue .bar, .nav-id .dot, #ariaBot .pupil, #ariaBot::before, .boot-bar{ animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="boot-screen" id="bootScreen">
+  <div class="boot-line">INITIALIZING FAZWA SYSTEM<span id="bootDots"></span></div>
+  <div class="boot-bar-wrap"><div class="boot-bar" id="bootBar"></div></div>
+  <div class="boot-line">PROJECTS ......... <b>ONLINE</b></div>
+  <div class="boot-line">ROBOTICS ......... <b>ONLINE</b></div>
+  <div class="boot-line">CREATIVITY ....... <b>ONLINE</b></div>
+  <div class="boot-line">CURIOSITY ........ <b>ONLINE</b></div>
+  <div class="boot-welcome" id="bootWelcome">WELCOME TO <span>FAZWA</span></div>
+</div>
+
+<div class="grid-bg"></div>
+<div class="noise-glow"></div>
+
+<nav>
+  <div class="nav-id"><span class="dot"></span> FAZWA // EXPO-ID :: LIVE</div>
+  <div class="nav-links">
+    <a class="nav-link" href="#rate">RATE</a>
+    <a class="nav-link" href="#archive">PROJECTS</a>
+    <a class="nav-link" href="#journal">JOURNAL</a>
+    <a class="nav-link" href="#contact">CONTACT</a>
+  </div>
+</nav>
+
+<div id="ariaBot" aria-hidden="true">
+  <img src="robo.jpg" alt="">
+  <div class="pupil l"></div>
+  <div class="pupil r"></div>
+</div>
+
+<!-- ================= HERO ================= -->
+<section class="hero" style="padding-top:120px;">
+  <div class="eyebrow">STUDENT INNOVATOR · EXPO IDENTITY CARD</div>
+  <h1 class="title">PROJECT<br><span>FAZWA</span></h1>
+  <p class="subhead">Welcome to my expo station. Scan, scroll, and meet the robot I built — full story, specs, and build notes below.</p>
+
+  <div class="id-card">
+    <div class="id-card-head">OWNER RECORD <b>// 001</b></div>
+    <div class="id-rows">
+      <div class="id-row"><div class="id-label">NAME</div><div class="id-value">Muhammed Fawaz P S</div></div>
+      <div class="id-row"><div class="id-label">PHONE</div><div class="id-value"><a href="tel:+919544382682">+91 95443 82682</a></div></div>
+      <div class="id-row"><div class="id-label">EMAIL</div><div class="id-value"><a href="mailto:vizzfazwafazuh@gmail.com">vizzfazwafazuh@gmail.com</a></div></div>
+    </div>
+  </div>
+
+  <div class="scroll-cue"><div class="bar"></div> SCROLL TO EXPLORE</div>
+</section>
+
+<!-- ================= 01 RATE ================= -->
+<section id="rate">
+  <div class="section-head">
+    <div class="eyebrow"><span class="section-num">01 //</span>&nbsp;FEEDBACK LOG</div>
+    <h2>RATE THE WELCOME ROBOT</h2>
+  </div>
+
+  <div class="rate-card">
+    <div class="rate-head">SUBMIT RATING <b>// #001</b></div>
+    <div class="rate-body">
+      <div class="star-picker" id="starPicker">
+        <button type="button" class="star-btn" data-val="5">★</button>
+        <button type="button" class="star-btn" data-val="4">★</button>
+        <button type="button" class="star-btn" data-val="3">★</button>
+        <button type="button" class="star-btn" data-val="2">★</button>
+        <button type="button" class="star-btn" data-val="1">★</button>
+      </div>
+      <input type="text" id="raterName" class="rate-input" placeholder="YOUR NAME" maxlength="40">
+      <button type="button" id="rateSubmit" class="rate-submit" disabled>SUBMIT RATING</button>
+      <div class="rate-msg" id="rateMsg"></div>
+    </div>
+  </div>
+
+  <div class="rating-list-box">
+    <div class="rating-list-head"><span>RATED BY</span><span id="ratingCount">— </span></div>
+    <div class="rating-list" id="ratingList">
+      <div class="rating-empty">LOADING RATINGS…</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 02 INTRODUCING FAWAZ ================= -->
+<section id="about">
+  <div class="section-head">
+    <div class="eyebrow"><span class="section-num">02 //</span>&nbsp;WHO IS BEHIND FAZWA</div>
+    <h2>INTRODUCING FAWAZ</h2>
+  </div>
+
+  <div class="story">
+    <p><b>My name is Muhammed Fawaz P S</b>, but most people know me as "Fazwa." I'm 16, from Old Lakkidi in Palakkad, Kerala — currently in Plus One at NSSKPT VHS School, and pursuing a JDS (Junior Software Developer) course on the side.</p>
+    <p>You've probably seen the name FAZWA across my projects. Here's how it started.</p>
+
+    <h4>HOW I ENTERED ROBOTICS</h4>
+    <p>It didn't start with a big lab or expensive equipment — it started at school. In 10th standard I joined <b>Little Kites</b>, my school's computer club. The classes, activities and camps there gave me my first real sense of what robotics actually was.</p>
+    <p>From there I kept going on my own — YouTube, Google, AI tools, trial and error. My first real build was a small phone-controlled mini car, put together mostly by researching and making mistakes until it worked.</p>
+
+    <h4>THE CAR THAT BECAME MANY PROJECTS</h4>
+    <p>After that project, I took the car apart instead of leaving it as one finished thing. I listed every component I had and started asking: <i>what else can I build with these?</i> Most new ideas only needed one or two extra parts, so I'd buy those — and realized that combining what I already had with a few new components meant I could build something bigger. One project slowly became another. Then another.</p>
+
+    <div class="quote">Search → Learn → Build → Break → Fix → Improve → Repeat.</div>
+
+    <p>Every project taught me something — sometimes from a successful experiment, sometimes because it completely failed. Every failure gave me another question to research, every question another idea, and every idea another reason to build something new. That's how robotics, electronics, programming and web development grew for me — one project at a time. I call it <b>The Mass Entry of Fawaz.</b></p>
+
+    <h4>I DIDN'T LEARN EVERYTHING ALONE</h4>
+    <p>My brother has always been there through this — helping with ideas, pushing me to try new things, and giving me my first real understanding of web development and digital projects. But the actual learning — researching, experimenting, breaking things, figuring it out — was always mine to do.</p>
+
+    <div class="tag-pills">
+      <span class="tag-pill">STUDENT</span>
+      <span class="tag-pill">ROBOTICS ENTHUSIAST</span>
+      <span class="tag-pill">WEB DEVELOPER</span>
+      <span class="tag-pill">ELECTRONICS &amp; ARDUINO</span>
+      <span class="tag-pill">CREATIVE PROJECTS</span>
+    </div>
+
+    <div class="final-line">
+      <div class="big">"I didn't start knowing how to build robots. I started by wanting to know how."</div>
+      <div class="tag">THIS IS MY STORY. THIS IS FAZWA.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 03 MOTIVATION ================= -->
+<section id="motivation">
+  <div class="section-head">
+    <div class="eyebrow"><span class="section-num">03 //</span>&nbsp;WHY I KEEP BUILDING</div>
+    <h2>MY MOTIVATION</h2>
+  </div>
+  <div class="motiv-card">
+    <p>A lot of what I build is inspired by the people I care about, my family, and the dreams I want to turn into reality.</p>
+    <p>The confidence to keep creating, improving and dreaming bigger comes from the person who inspires me to believe in myself.</p>
+  </div>
+  <div class="motiv-tag">BUILT WITH PURPOSE // DRIVEN BY PEOPLE I LOVE</div>
+</section>
+
+<!-- ================= 04 WHAT IS FAZWA ================= -->
+<section id="whatis">
+  <div class="section-head">
+    <div class="eyebrow"><span class="section-num">04 //</span>&nbsp;THE NAME BEHIND THE WORK</div>
+    <h2>WHAT IS FAZWA?</h2>
+  </div>
+  <div class="story">
+    <p>Fazwa is a nickname I created for myself — a name I want to carry across everything I build. Instead of every project being remembered only as something I made, I want "Fazwa" to become part of my work, my ideas and my journey as a creator.</p>
+  </div>
+  <div class="fazwa-mark">FAZWA<span>.</span></div>
+  <div class="fazwa-loop">// BUILD • CREATE • LEARN • REPEAT</div>
+</section>
+
+<!-- ================= 05 PROJECT ARCHIVE ================= -->
+<section id="archive">
+  <div class="section-head">
+    <div class="eyebrow"><span class="section-num">05 //</span>&nbsp;BUILD LOG</div>
+    <h2>THE FAZWA PROJECT ARCHIVE</h2>
+  </div>
+  <div class="archive-grid">
+    <div class="archive-item active"><div class="num">01</div><div class="name">Welcome Robot</div><div class="tag">FEATURED BELOW</div></div>
+    <div class="archive-item"><div class="num">02</div><div class="name">SweepX Fazwa</div><div class="tag">COMING SOON</div></div>
+    <div class="archive-item"><div class="num">03</div><div class="name">Accident Identification Plate</div><div class="tag">COMING SOON</div></div>
+    <div class="archive-item"><div class="num">04</div><div class="name">OLED Live Draw Pad</div><div class="tag">COMING SOON</div></div>
+    <div class="archive-item"><div class="num">05</div><div class="name">Robotics Projects</div><div class="tag">ARCHIVE</div></div>
+    <div class="archive-item"><div class="num">06</div><div class="name">Web Projects</div><div class="tag">ARCHIVE</div></div>
+    <div class="archive-item"><div class="num">07</div><div class="name">Arduino / ESP Projects</div><div class="tag">ARCHIVE</div></div>
+    <div class="archive-item"><div class="num">08</div><div class="name">Future Projects</div><div class="tag">LOADING…</div></div>
+  </div>
+</section>
+
+<!-- ================= 06 WELCOME ROBOT FULL STORY ================= -->
+<section id="welcome-robot">
+  <div class="section-head">
+    <div class="eyebrow"><span class="section-num">06 //</span>&nbsp;BUILD LOG</div>
+    <h2>WELCOME ROBOT</h2>
+  </div>
+
+  <p class="proj-desc" style="margin-bottom:26px;">"I wanted to build a robot that doesn't simply stand at an expo — I wanted it to actually welcome people."</p>
+
+  <div class="build-flow">
+    <span class="step">IDEA</span><span class="arrow">→</span>
+    <span class="step">DESIGN</span><span class="arrow">→</span>
+    <span class="step">CIRCUIT</span><span class="arrow">→</span>
+    <span class="step">CODE</span><span class="arrow">→</span>
+    <span class="step">BODY</span><span class="arrow">→</span>
+    <span class="step">TEST</span><span class="arrow">→</span>
+    <span class="step" style="color:var(--red); border-color:var(--red-dim);">EXPO</span>
+  </div>
+
+  <div class="project-card" style="margin-top:40px;">
+    <div class="project-top">
+      <div><span class="proj-code">#001</span><span class="proj-name">Welcome Robot</span></div>
+      <div class="status-pill"><span class="dot"></span> EXPO SUCCESSFUL</div>
+    </div>
+
+    <div class="viewer-wrap">
+      <div class="viewer-toolbar">
+        <button class="rev-btn active" data-rev="a">REV A · FULL BODY</button>
+        <button class="rev-btn" data-rev="b">REV B · MATRIX HEAD</button>
+      </div>
+      <div id="robot3d"></div>
+      <div class="viewer-loading" id="viewerLoading">LOADING 3D MODEL…</div>
+      <div class="viewer-hint">DRAG TO ROTATE · SCROLL TO ZOOM</div>
+    </div>
+
+    <div class="proj-body">
+      <p class="proj-desc">
+        A foam-bodied <b>expo greeter robot</b> that waves hello with a servo-driven arm, blinks through animated
+        LED-matrix eyes, and plays a welcome jingle — all triggered by two push buttons on its back panel. The head
+        was later redesigned into a compact dual-matrix version that scrolls "WELCOME" and my name across its two
+        8×8 displays before looping into circle-and-square eye animations.
+      </p>
+
+      <div class="spec-grid">
+        <div class="spec-cell"><div class="k">TOTAL HEIGHT</div><div class="v">37–40 cm</div></div>
+        <div class="spec-cell"><div class="k">HEAD (W×H×D)</div><div class="v">16×14×10 cm</div></div>
+        <div class="spec-cell"><div class="k">BODY (W×H×D)</div><div class="v">22×20×11 cm</div></div>
+        <div class="spec-cell"><div class="k">ARM REACH</div><div class="v">70° swing</div></div>
+        <div class="spec-cell"><div class="k">ARM LENGTH</div><div class="v">15–18 cm</div></div>
+        <div class="spec-cell"><div class="k">POWER</div><div class="v">5V · 2A</div></div>
+      </div>
+
+      <div class="col2">
+        <div>
+          <div class="block-label">FEATURES</div>
+          <ul class="feature-list">
+            <li>Servo-driven right arm waves a 70° hand salam on greeting</li>
+            <li>3× 8×8 LED matrix eyes with expressive blink animation</li>
+            <li>DFPlayer Mini + speaker for welcome voice line &amp; songs</li>
+            <li>Two rear push buttons — one for greeting, one for music</li>
+            <li>Rev B head: dual-matrix scroll text "WELCOME" + name, looping into circle/square eye animation</li>
+            <li>Flexible ball-joint neck on the redesigned head</li>
+          </ul>
+        </div>
+        <div>
+          <div class="block-label">CORE PARTS</div>
+          <ul class="parts-list">
+            <li>Arduino Uno</li>
+            <li>DFPlayer Mini</li>
+            <li>3× 8×8 LED Matrix (MAX7219)</li>
+            <li>SG90 / MG90S Servo Motor</li>
+            <li>3W–5W Speaker</li>
+            <li>2× Push Buttons</li>
+            <li>MicroSD card (MP3 files)</li>
+            <li>5V 2A power supply</li>
+            <li>5mm foam board / PVC sheet body</li>
+            <li>Hot glue, acrylic paint &amp; stickers</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="btn-map">
+        <div class="btn-cell a"><div class="k">BUTTON 1</div><div class="v">Welcome + arm wave</div></div>
+        <div class="btn-cell b"><div class="k">BUTTON 2</div><div class="v">Plays song</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 07 IDEAS FROM SENSEI ================= -->
+<section id="sensei">
+  <div class="section-head">
+    <div class="eyebrow"><span class="section-num">07 //</span>&nbsp;HOW THE BUILDS GET SHAPED</div>
+    <h2>IDEAS FROM SENSEI</h2>
+  </div>
+  <div class="story">
+    <p>Some ideas started with a question. Some started with an experiment. And some started with a conversation.</p>
+  </div>
+  <div class="sensei-grid">
+    <div class="sensei-cell"><div class="k">01</div><div class="v">Concept</div></div>
+    <div class="sensei-cell"><div class="k">02</div><div class="v">Planning</div></div>
+    <div class="sensei-cell"><div class="k">03</div><div class="v">Engineering</div></div>
+    <div class="sensei-cell"><div class="k">04</div><div class="v">Coding</div></div>
+    <div class="sensei-cell"><div class="k">05</div><div class="v">Debugging</div></div>
+  </div>
+  <div class="sensei-foot">BUILT BY FAZWA. GUIDED BY IDEAS.</div>
+</section>
+
+<!-- ================= 08 BUILD JOURNAL ================= -->
+<section id="journal">
+  <div class="section-head">
+    <div class="eyebrow"><span class="section-num">08 //</span>&nbsp;WELCOME ROBOT LOG</div>
+    <h2>BUILD JOURNAL</h2>
+  </div>
+  <div class="timeline">
+    <div class="tl-item"><div class="day">DAY 01</div><div class="desc">Idea</div></div>
+    <div class="tl-item"><div class="day">DAY 02</div><div class="desc">Circuit</div></div>
+    <div class="tl-item"><div class="day">DAY 03</div><div class="desc">First code</div></div>
+    <div class="tl-item"><div class="day">DAY 04</div><div class="desc">Debugging</div></div>
+    <div class="tl-item"><div class="day">DAY 05</div><div class="desc">Body making</div></div>
+    <div class="tl-item"><div class="day">DAY 06</div><div class="desc">Testing</div></div>
+    <div class="tl-item expo"><div class="day">EXPO DAY</div><div class="desc">Robot live — teachers &amp; students called it "super."</div></div>
+  </div>
+</section>
+
+<!-- ================= 09 STATS ================= -->
+<section id="stats">
+  <div class="section-head">
+    <div class="eyebrow"><span class="section-num">09 //</span>&nbsp;RUNNING TOTAL</div>
+    <h2>FAZWA STATS</h2>
+  </div>
+  <div class="stat-grid">
+    <div class="stat-cell"><div class="num">08+</div><div class="lbl">PROJECTS BUILT</div></div>
+    <div class="stat-cell"><div class="num">02+</div><div class="lbl">ROBOTS BUILT</div></div>
+    <div class="stat-cell"><div class="num">03+</div><div class="lbl">EXPO PROJECTS</div></div>
+    <div class="stat-cell"><div class="num">10+</div><div class="lbl">ARDUINO PROJECTS</div></div>
+    <div class="stat-cell"><div class="num">05+</div><div class="lbl">WEB PROJECTS</div></div>
+    <div class="stat-cell"><div class="num">∞</div><div class="lbl">IDEAS GENERATED</div></div>
+    <div class="stat-cell curiosity"><div class="num">100%</div><div class="lbl">CURIOSITY</div></div>
+  </div>
+</section>
+
+<!-- ================= 10 CONTACT ================= -->
+<section id="contact">
+  <div class="section-head">
+    <div class="eyebrow"><span class="section-num">10 //</span>&nbsp;GET IN TOUCH</div>
+    <h2>LET'S CONNECT</h2>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-form-box">
+      <div class="block-label">SEND A MESSAGE</div>
+      <input type="text" id="cName" class="rate-input" placeholder="NAME">
+      <input type="email" id="cEmail" class="rate-input" placeholder="EMAIL">
+      <textarea id="cMsg" class="rate-textarea" placeholder="MESSAGE"></textarea>
+      <button type="button" id="cSend" class="rate-submit">SEND MESSAGE</button>
+      <div class="rate-msg" id="cMsgStatus"></div>
+    </div>
+    <div class="contact-info-box">
+      <div>
+        <div class="id-row" style="border-color:var(--line);"><div class="id-label">NAME</div><div class="id-value">Muhammed Fawaz P S</div></div>
+        <div class="id-row" style="border-color:var(--line);"><div class="id-label">PHONE</div><div class="id-value"><a href="tel:+919544382682">95443 82682</a></div></div>
+        <div class="id-row" style="border-color:var(--line); border-bottom:none;"><div class="id-label">EMAIL</div><div class="id-value"><a href="mailto:vizzfazwafazuh@gmail.com">vizzfazwafazuh@gmail.com</a></div></div>
+      </div>
+      <div class="contact-note">SEND MESSAGE OPENS YOUR EMAIL APP WITH THIS FORM PRE-FILLED — NO SERVER NEEDED.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-title">MORE BUILDS <span>LOADING...</span></div>
+</footer>
+
+<div id="robot-track">
+  <div class="rail"></div>
+  <div id="robo">
+    <div class="label">FAZWA-BOT</div>
+    <div class="shadow"></div>
+    <div class="flip">
+      <div class="leg l"></div>
+      <div class="leg r"></div>
+      <div class="body"></div>
+      <div class="neck"></div>
+      <div class="head">
+        <div class="ear l"></div>
+        <div class="ear r"></div>
+        <div class="eye l"></div>
+        <div class="eye r"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+<script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function(){
+  const mount = document.getElementById('robot3d');
+  const loadingEl = document.getElementById('viewerLoading');
+  if(!mount || typeof THREE === 'undefined'){ if(loadingEl) loadingEl.textContent = '3D unavailable — check connection'; return; }
+
+  const CYAN = 0x39e6e0, RED = 0xff4438, FOAM = 0xe9e4d8, DARK = 0x151b25, DARKER = 0x0d1119;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(38, mount.clientWidth / mount.clientHeight, 0.1, 100);
+  camera.position.set(3.4, 2.1, 4.6);
+
+  const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(mount.clientWidth, mount.clientHeight);
+  mount.appendChild(renderer.domElement);
+
+  scene.add(new THREE.AmbientLight(0x445266, 1.1));
+  const key = new THREE.DirectionalLight(0xffffff, 1.1);
+  key.position.set(4, 6, 5);
+  scene.add(key);
+  const rim = new THREE.PointLight(CYAN, 1.4, 12);
+  rim.position.set(-3, 2, -3);
+  scene.add(rim);
+  const fillRed = new THREE.PointLight(RED, 0.6, 10);
+  fillRed.position.set(2, -1, -2);
+  scene.add(fillRed);
+
+  const grid = new THREE.GridHelper(10, 20, 0x1f2937, 0x141a24);
+  grid.position.y = -1.55;
+  scene.add(grid);
+
+  function emissiveMat(color, intensity){
+    return new THREE.MeshStandardMaterial({ color, emissive:color, emissiveIntensity: intensity||1.6, roughness:.4, metalness:.1 });
+  }
+  function matteMat(color){ return new THREE.MeshStandardMaterial({ color, roughness:.75, metalness:.05 }); }
+
+  const groupA = new THREE.Group();
+  const body = new THREE.Mesh(new THREE.BoxGeometry(1.7, 1.55, 0.95), matteMat(FOAM));
+  body.position.y = 0.05;
+  groupA.add(body);
+  const speaker = new THREE.Mesh(new THREE.CircleGeometry(0.34, 24), matteMat(0x2a2f38));
+  speaker.position.set(-0.35, -0.15, 0.48);
+  groupA.add(speaker);
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.28, 16), matteMat(DARK));
+  neck.position.y = 0.95;
+  groupA.add(neck);
+  const head = new THREE.Mesh(new THREE.BoxGeometry(1.25, 1.05, 0.85), matteMat(FOAM));
+  head.position.y = 1.55;
+  groupA.add(head);
+  for(let i=-1;i<=1;i++){
+    const eye = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.28, 0.06), emissiveMat(CYAN, 1.8));
+    eye.position.set(i*0.36, 1.6, 0.44);
+    groupA.add(eye);
+  }
+  const mouth = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.02, 8, 24, Math.PI), matteMat(0x1a1e26));
+  mouth.rotation.z = Math.PI;
+  mouth.position.set(0, 1.28, 0.44);
+  groupA.add(mouth);
+
+  const shoulderR = new THREE.Group();
+  shoulderR.position.set(0.95, 0.55, 0);
+  const upperArmR = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.22, 0.22), matteMat(FOAM));
+  upperArmR.position.set(0.3, 0, 0);
+  shoulderR.add(upperArmR);
+  const foreArmR = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.2, 0.2), matteMat(FOAM));
+  foreArmR.position.set(0.85, 0.35, 0);
+  foreArmR.rotation.z = Math.PI/2.4;
+  shoulderR.add(foreArmR);
+  shoulderR.rotation.z = 0.5;
+  groupA.add(shoulderR);
+
+  const armL = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.22, 0.22), matteMat(FOAM));
+  armL.position.set(-1.05, 0.35, 0);
+  armL.rotation.z = -0.35;
+  groupA.add(armL);
+
+  for(let i=0;i<2;i++){
+    const btn = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,0.04,16), emissiveMat(RED,1.2));
+    btn.rotation.x = Math.PI/2;
+    btn.position.set(0.45, 0.15 - i*0.28, -0.48);
+    groupA.add(btn);
+  }
+  scene.add(groupA);
+
+  const groupB = new THREE.Group();
+  const baseB = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.68, 0.28, 32), matteMat(DARKER));
+  baseB.position.y = -0.55;
+  groupB.add(baseB);
+  const trimB = new THREE.Mesh(new THREE.TorusGeometry(0.63, 0.02, 8, 32), emissiveMat(RED, 1.2));
+  trimB.rotation.x = Math.PI/2;
+  trimB.position.y = -0.68;
+  groupB.add(trimB);
+  const neckB = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.13, 0.35, 16), matteMat(0x1a1f29));
+  neckB.position.y = -0.2;
+  groupB.add(neckB);
+  const jointB = new THREE.Mesh(new THREE.SphereGeometry(0.16, 16, 16), matteMat(0x20262f));
+  jointB.position.y = 0.02;
+  groupB.add(jointB);
+  const headB = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.95, 0.95), matteMat(DARK));
+  headB.position.y = 0.55;
+  groupB.add(headB);
+  [-0.3, 0.3].forEach((x)=>{
+    const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.42), matteMat(0x05070a));
+    screen.position.set(x, 0.55, 0.481);
+    groupB.add(screen);
+    for(let r=0;r<3;r++){
+      for(let c=0;c<3;c++){
+        const px = new THREE.Mesh(new THREE.PlaneGeometry(0.06,0.06), emissiveMat(CYAN, 2.2));
+        px.position.set(x - 0.1 + c*0.1, 0.68 - r*0.1, 0.485);
+        groupB.add(px);
+      }
+    }
+  });
+  [-0.62, 0.62].forEach((x)=>{
+    const ear = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 16), emissiveMat(RED, 1.4));
+    ear.position.set(x, 0.55, 0);
+    groupB.add(ear);
+  });
+  groupB.visible = false;
+  scene.add(groupB);
+
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 0.3, 0);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 1.4;
+  controls.minDistance = 2.6;
+  controls.maxDistance = 8;
+  controls.enablePan = false;
+  controls.update();
+
+  let idleTimer = null;
+  controls.addEventListener('start', ()=>{ controls.autoRotate = false; clearTimeout(idleTimer); });
+  controls.addEventListener('end', ()=>{ idleTimer = setTimeout(()=>{ controls.autoRotate = true; }, 2600); });
+
+  document.querySelectorAll('.rev-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.rev-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const rev = btn.dataset.rev;
+      groupA.visible = rev === 'a';
+      groupB.visible = rev === 'b';
+      controls.target.set(0, rev === 'a' ? 0.3 : 0.1, 0);
+    });
+  });
+
+  function resize(){
+    const w = mount.clientWidth, h = mount.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  }
+  window.addEventListener('resize', resize);
+  new ResizeObserver(resize).observe(mount);
+
+  let t = 0;
+  function animate(){
+    requestAnimationFrame(animate);
+    t += 0.016;
+    if(groupA.visible) shoulderR.rotation.z = 0.5 + Math.sin(t*1.6)*0.18;
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  if(loadingEl) loadingEl.style.opacity = '0';
+  animate();
+})();
+</script>
+
+<script>
+  const robo = document.getElementById('robo');
+  const trackW = () => window.innerWidth - 64;
+  let lastY = window.scrollY;
+  let walkTimer = null;
+
+  function positionRobot(){
+    const doc = document.documentElement;
+    const max = Math.max(doc.scrollHeight - window.innerHeight, 1);
+    const progress = Math.min(Math.max(window.scrollY / max, 0), 1);
+    const x = progress * trackW();
+    robo.style.transform = `translateX(${x}px)`;
+  }
+
+  function onScroll(){
+    const y = window.scrollY;
+    if (y > lastY) { robo.classList.remove('face-left'); }
+    else if (y < lastY) { robo.classList.add('face-left'); }
+    lastY = y;
+    robo.classList.add('walking');
+    clearTimeout(walkTimer);
+    walkTimer = setTimeout(() => robo.classList.remove('walking'), 260);
+    positionRobot();
+  }
+
+  window.addEventListener('scroll', onScroll, { passive:true });
+  window.addEventListener('resize', positionRobot);
+  positionRobot();
+
+  const ariaBot = document.getElementById('ariaBot');
+  const pupilL = ariaBot ? ariaBot.querySelector('.pupil.l') : null;
+  const pupilR = ariaBot ? ariaBot.querySelector('.pupil.r') : null;
+  const MAX_OFFSET = 4;
+
+  function trackPointer(e){
+    if(!ariaBot) return;
+    const rect = ariaBot.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const angle = Math.atan2(e.clientY - cy, e.clientX - cx);
+    const dist = Math.min(Math.hypot(e.clientX - cx, e.clientY - cy) / 260, 1);
+    const ox = Math.cos(angle) * MAX_OFFSET * dist;
+    const oy = Math.sin(angle) * MAX_OFFSET * dist;
+    const t = `translate(${ox}px, ${oy}px)`;
+    if(pupilL) pupilL.style.transform = t;
+    if(pupilR) pupilR.style.transform = t;
+  }
+  window.addEventListener('mousemove', trackPointer, { passive:true });
+</script>
+
+<!-- ================= RATING WIDGET (Supabase) ================= -->
+<script>
+(function(){
+  const SUPABASE_URL = "https://vesssdwsqeuzhmfublbs.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_frykR60eQ9CioGYn0H5ucw_7fBTbEXQ";
+  const REST = SUPABASE_URL + "/rest/v1/ratings";
+  const headers = {
+    "apikey": SUPABASE_KEY,
+    "Authorization": "Bearer " + SUPABASE_KEY,
+    "Content-Type": "application/json"
+  };
+
+  const starPicker = document.getElementById('starPicker');
+  const stars = starPicker ? Array.from(starPicker.querySelectorAll('.star-btn')) : [];
+  const nameInput = document.getElementById('raterName');
+  const submitBtn = document.getElementById('rateSubmit');
+  const msgEl = document.getElementById('rateMsg');
+  const listEl = document.getElementById('ratingList');
+  const countEl = document.getElementById('ratingCount');
+
+  let selected = 0;
+
+  function paintStars(val){
+    stars.forEach(btn => {
+      const v = parseInt(btn.dataset.val, 10);
+      btn.classList.toggle('filled', v <= val);
+    });
+  }
+
+  function updateSubmitState(){
+    submitBtn.disabled = !(selected > 0 && nameInput.value.trim().length > 0);
+  }
+
+  stars.forEach(btn => {
+    btn.addEventListener('click', () => {
+      selected = parseInt(btn.dataset.val, 10);
+      paintStars(selected);
+      updateSubmitState();
+    });
+    btn.addEventListener('mouseenter', () => paintStars(parseInt(btn.dataset.val, 10)));
+  });
+  if(starPicker){ starPicker.addEventListener('mouseleave', () => paintStars(selected)); }
+  if(nameInput) nameInput.addEventListener('input', updateSubmitState);
+
+  function setMsg(text, type){
+    msgEl.textContent = text || '';
+    msgEl.className = 'rate-msg' + (type ? ' ' + type : '');
+  }
+
+  function starsToText(n){
+    return '★★★★★'.slice(0, n) + '☆☆☆☆☆'.slice(0, 5 - n);
+  }
+
+  async function loadRatings(){
+    try{
+      const res = await fetch(REST + '?select=name,stars,created_at&order=created_at.desc', { headers });
+      if(!res.ok) throw new Error('fetch failed');
+      const rows = await res.json();
+      renderList(rows);
+    }catch(err){
+      listEl.innerHTML = '<div class="rating-empty">COULD NOT LOAD RATINGS. CHECK CONNECTION.</div>';
+      countEl.textContent = '—';
+    }
+  }
+
+  function renderList(rows){
+    countEl.textContent = rows.length + (rows.length === 1 ? ' RATING' : ' RATINGS');
+    if(!rows.length){
+      listEl.innerHTML = '<div class="rating-empty">NO RATINGS YET — BE THE FIRST.</div>';
+      return;
+    }
+    listEl.innerHTML = rows.map(r => {
+      const safeName = String(r.name || 'Anonymous').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const n = Math.max(1, Math.min(5, parseInt(r.stars,10) || 0));
+      return `<div class="rating-item"><span class="name">${safeName}</span><span class="stars">${starsToText(n)}</span></div>`;
+    }).join('');
+  }
+
+  async function submitRating(){
+    if(selected < 1 || !nameInput.value.trim()) return;
+    submitBtn.disabled = true;
+    setMsg('SUBMITTING…');
+    try{
+      const res = await fetch(REST, {
+        method: 'POST',
+        headers: Object.assign({}, headers, { "Prefer": "return=minimal" }),
+        body: JSON.stringify({ name: nameInput.value.trim(), stars: selected })
+      });
+      if(!res.ok) throw new Error('insert failed');
+      setMsg('SAVED — THANKS!', 'ok');
+      nameInput.value = '';
+      selected = 0;
+      paintStars(0);
+      updateSubmitState();
+      loadRatings();
+    }catch(err){
+      setMsg('COULD NOT SAVE. TRY AGAIN.', 'err');
+      submitBtn.disabled = false;
+    }
+  }
+
+  if(submitBtn) submitBtn.addEventListener('click', submitRating);
+  loadRatings();
+})();
+</script>
+
+<!-- ================= CONTACT FORM (mailto) ================= -->
+<script>
+(function(){
+  const sendBtn = document.getElementById('cSend');
+  const statusEl = document.getElementById('cMsgStatus');
+  if(!sendBtn) return;
+  sendBtn.addEventListener('click', () => {
+    const name = document.getElementById('cName').value.trim();
+    const email = document.getElementById('cEmail').value.trim();
+    const msg = document.getElementById('cMsg').value.trim();
+    if(!name || !msg){
+      statusEl.textContent = 'PLEASE FILL YOUR NAME AND MESSAGE.';
+      statusEl.className = 'rate-msg err';
+      return;
+    }
+    const subject = encodeURIComponent('Message from ' + name + ' — via Project Fazwa site');
+    const body = encodeURIComponent(msg + '\n\n— ' + name + (email ? ' (' + email + ')' : ''));
+    window.location.href = `mailto:vizzfazwafazuh@gmail.com?subject=${subject}&body=${body}`;
+    statusEl.textContent = 'OPENING YOUR EMAIL APP…';
+    statusEl.className = 'rate-msg ok';
+  });
+})();
+</script>
+
+<!-- ================= BOOT SCREEN ================= -->
+<script>
+(function(){
+  const boot = document.getElementById('bootScreen');
+  const bar = document.getElementById('bootBar');
+  const welcome = document.getElementById('bootWelcome');
+  const dots = document.getElementById('bootDots');
+  if(!boot) return;
+
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(()=>{ bar.style.width = '100%'; });
+
+  let dotCount = 0;
+  const dotTimer = setInterval(()=>{ dotCount = (dotCount+1)%4; dots.textContent = '.'.repeat(dotCount); }, 220);
+
+  setTimeout(()=>{ welcome.classList.add('show'); }, 950);
+  setTimeout(()=>{
+    clearInterval(dotTimer);
+    boot.classList.add('hide');
+    document.body.style.overflow = '';
+  }, 1500);
+})();
+</script>
+
+</body>
+</html>
