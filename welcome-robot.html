@@ -1,0 +1,269 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Welcome Robot — FAZWA</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><script>try{if(sessionStorage.getItem("fz_boot"))document.documentElement.classList.add("booted")}catch(e){}</script></head><body><div class="grid-bg"></div><div class="noise-glow"></div><nav><div class="nav-id"><span class="dot"></span> FAZWA // EXPO-ID :: LIVE</div><div class="nav-links"><a class="nav-link" href="index.html#projects">← PROJECTS</a></div></nav><div class="phero"><a class="back" href="index.html#projects">← BACK TO PROJECTS</a><div class="eyebrow">PROJECT 08 // WELCOMEBOT</div><h1>WELCOME<br><span>ROBOT</span></h1><div class="st" style="margin-top:20px">EXPO SUCCESSFUL</div></div><main class="wrap"><div id="overview" class="acc open"><button class="acc-h" aria-expanded="true"><span class="n">01 //</span><span class="t">PROJECT OVERVIEW<small>WHAT IT IS · WHY I BUILT IT</small></span><i class="pm"></i></button><div class="acc-b"><div class="acc-in"><div class="pad"><p class="proj-desc" style="margin-bottom:26px;">"I wanted to build a robot that doesn't simply stand at an expo — I wanted it to actually welcome people."</p><div class="build-flow">
+    <span class="step">IDEA</span><span class="arrow">→</span>
+    <span class="step">DESIGN</span><span class="arrow">→</span>
+    <span class="step">CIRCUIT</span><span class="arrow">→</span>
+    <span class="step">CODE</span><span class="arrow">→</span>
+    <span class="step">BODY</span><span class="arrow">→</span>
+    <span class="step">TEST</span><span class="arrow">→</span>
+    <span class="step" style="color:var(--red); border-color:var(--red-dim);">EXPO</span>
+  </div>
+
+  <p class="proj-desc">
+        A foam-bodied <b>expo greeter robot</b> that waves hello with a servo-driven arm, blinks through animated
+        LED-matrix eyes, and plays a welcome jingle — all triggered by two push buttons on its back panel. The head
+        was later redesigned into a compact dual-matrix version that scrolls "WELCOME" and my name across its two
+        8×8 displays before looping into circle-and-square eye animations.
+      </p></div></div></div></div><div id="gallery" class="acc open"><button class="acc-h" aria-expanded="true"><span class="n">02 //</span><span class="t">ROBOT DESIGN GALLERY<small>HEAD · BODY · DESIGNS</small></span><i class="pm"></i></button><div class="acc-b"><div class="acc-in"><div class="pad"><div class="gal"><figure><img src="welcome-robot-v1.png" alt="Welcome Robot design V1"><figcaption>ROBOT DESIGN · V1</figcaption></figure><figure><img src="welcome-robot-v2.png" alt="Welcome Robot design V2"><figcaption>ROBOT DESIGN · V2</figcaption></figure></div><p class="hint">TAP AN IMAGE TO VIEW LARGE</p></div></div></div></div><div id="viewer" class="acc open"><button class="acc-h" aria-expanded="true"><span class="n">03 //</span><span class="t">3D MODEL VIEWER<small>REV A · REV B</small></span><i class="pm"></i></button><div class="acc-b"><div class="acc-in"><div class="pad"><div class="viewer-wrap">
+      <div class="viewer-toolbar">
+        <button class="rev-btn active" data-rev="a">REV A · FULL BODY</button>
+        <button class="rev-btn" data-rev="b">REV B · MATRIX HEAD</button>
+      </div>
+      <div id="robot3d"></div>
+      <div class="viewer-loading" id="viewerLoading">LOADING 3D MODEL…</div>
+      <div class="viewer-hint">DRAG TO ROTATE · SCROLL TO ZOOM</div>
+    </div>
+
+    </div></div></div></div><div id="specs" class="acc"><button class="acc-h" aria-expanded="false"><span class="n">04 //</span><span class="t">SPECS, FEATURES & PARTS<small>THE NUMBERS</small></span><i class="pm"></i></button><div class="acc-b"><div class="acc-in"><div class="pad"><div class="spec-grid">
+        <div class="spec-cell"><div class="k">TOTAL HEIGHT</div><div class="v">37–40 cm</div></div>
+        <div class="spec-cell"><div class="k">HEAD (W×H×D)</div><div class="v">16×14×10 cm</div></div>
+        <div class="spec-cell"><div class="k">BODY (W×H×D)</div><div class="v">22×20×11 cm</div></div>
+        <div class="spec-cell"><div class="k">ARM REACH</div><div class="v">70° swing</div></div>
+        <div class="spec-cell"><div class="k">ARM LENGTH</div><div class="v">15–18 cm</div></div>
+        <div class="spec-cell"><div class="k">POWER</div><div class="v">5V · 2A</div></div>
+      </div>
+
+      <div class="col2">
+        <div>
+          <div class="block-label">FEATURES</div>
+          <ul class="feature-list">
+            <li>Servo-driven right arm waves a 70° hand salam on greeting</li>
+            <li>3× 8×8 LED matrix eyes with expressive blink animation</li>
+            <li>DFPlayer Mini + speaker for welcome voice line &amp; songs</li>
+            <li>Two rear push buttons — one for greeting, one for music</li>
+            <li>Rev B head: dual-matrix scroll text "WELCOME" + name, looping into circle/square eye animation</li>
+            <li>Flexible ball-joint neck on the redesigned head</li>
+          </ul>
+        </div>
+        <div>
+          <div class="block-label">CORE PARTS</div>
+          <ul class="parts-list">
+            <li>Arduino Uno</li>
+            <li>DFPlayer Mini</li>
+            <li>3× 8×8 LED Matrix (MAX7219)</li>
+            <li>SG90 / MG90S Servo Motor</li>
+            <li>3W–5W Speaker</li>
+            <li>2× Push Buttons</li>
+            <li>MicroSD card (MP3 files)</li>
+            <li>5V 2A power supply</li>
+            <li>5mm foam board / PVC sheet body</li>
+            <li>Hot glue, acrylic paint &amp; stickers</li>
+          </ul>
+        </div>
+      </div>
+
+      </div></div></div></div><div id="principle" class="acc"><button class="acc-h" aria-expanded="false"><span class="n">05 //</span><span class="t">WORKING PRINCIPLE<small>HOW IT WORKS</small></span><i class="pm"></i></button><div class="acc-b"><div class="acc-in"><div class="pad"><div class="build-flow"><span class="step">INPUT · 2 PUSH BUTTONS</span><span class="arrow">→</span><span class="step">CONTROL · ARDUINO UNO</span><span class="arrow">→</span><span class="step">OUTPUT · SERVO + LED EYES + SPEAKER</span></div><div style="height:26px"></div><div class="btn-map">
+        <div class="btn-cell a"><div class="k">BUTTON 1</div><div class="v">Welcome + arm wave</div></div>
+        <div class="btn-cell b"><div class="k">BUTTON 2</div><div class="v">Plays song</div></div>
+      </div>
+    </div></div></div></div><div id="journal" class="acc"><button class="acc-h" aria-expanded="false"><span class="n">06 //</span><span class="t">BUILD JOURNAL<small>DAY BY DAY</small></span><i class="pm"></i></button><div class="acc-b"><div class="acc-in"><div class="pad"><div class="timeline">
+    <div class="tl-item"><div class="day">DAY 01</div><div class="desc">Idea</div></div>
+    <div class="tl-item"><div class="day">DAY 02</div><div class="desc">Circuit</div></div>
+    <div class="tl-item"><div class="day">DAY 03</div><div class="desc">First code</div></div>
+    <div class="tl-item"><div class="day">DAY 04</div><div class="desc">Debugging</div></div>
+    <div class="tl-item"><div class="day">DAY 05</div><div class="desc">Body making</div></div>
+    <div class="tl-item"><div class="day">DAY 06</div><div class="desc">Testing</div></div>
+    <div class="tl-item expo"><div class="day">EXPO DAY</div><div class="desc">Robot live — teachers &amp; students called it "super."</div></div>
+  </div></div></div></div></div></main><div class="lb" id="lb"><img alt=""></div><footer><div class="foot-title">MORE BUILDS <span>LOADING...</span></div><div class="team">TEAM FAZWA 💻⚡ — “Idea ente thalayil… bugs ente jeevithathil… success nammal ellavarudeyum!” 😂👑🔥</div></footer><div id="ariaBot" aria-hidden="true">
+  <img src="robo%20(1).jpg" alt="">
+  <div class="pupil l"></div>
+  <div class="pupil r"></div>
+</div>
+
+<div id="robot-track">
+  <div class="rail"></div>
+  <div id="robo">
+    <div class="label">FAZWA-BOT</div>
+    <div class="shadow"></div>
+    <div class="flip">
+      <div class="leg l"></div>
+      <div class="leg r"></div>
+      <div class="body"></div>
+      <div class="neck"></div>
+      <div class="head">
+        <div class="ear l"></div>
+        <div class="ear r"></div>
+        <div class="eye l"></div>
+        <div class="eye r"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script><script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script><script>(function(){
+  const mount = document.getElementById('robot3d');
+  const loadingEl = document.getElementById('viewerLoading');
+  if(!mount || typeof THREE === 'undefined'){ if(loadingEl) loadingEl.textContent = '3D unavailable — check connection'; return; }
+
+  const CYAN = 0x39e6e0, RED = 0xff4438, FOAM = 0xe9e4d8, DARK = 0x151b25, DARKER = 0x0d1119;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(38, (mount.clientWidth||1) / (mount.clientHeight||1), 0.1, 100);
+  camera.position.set(3.4, 2.1, 4.6);
+
+  const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(mount.clientWidth, mount.clientHeight);
+  mount.appendChild(renderer.domElement);
+
+  scene.add(new THREE.AmbientLight(0x445266, 1.1));
+  const key = new THREE.DirectionalLight(0xffffff, 1.1);
+  key.position.set(4, 6, 5);
+  scene.add(key);
+  const rim = new THREE.PointLight(CYAN, 1.4, 12);
+  rim.position.set(-3, 2, -3);
+  scene.add(rim);
+  const fillRed = new THREE.PointLight(RED, 0.6, 10);
+  fillRed.position.set(2, -1, -2);
+  scene.add(fillRed);
+
+  const grid = new THREE.GridHelper(10, 20, 0x1f2937, 0x141a24);
+  grid.position.y = -1.55;
+  scene.add(grid);
+
+  function emissiveMat(color, intensity){
+    return new THREE.MeshStandardMaterial({ color, emissive:color, emissiveIntensity: intensity||1.6, roughness:.4, metalness:.1 });
+  }
+  function matteMat(color){ return new THREE.MeshStandardMaterial({ color, roughness:.75, metalness:.05 }); }
+
+  const groupA = new THREE.Group();
+  const body = new THREE.Mesh(new THREE.BoxGeometry(1.7, 1.55, 0.95), matteMat(FOAM));
+  body.position.y = 0.05;
+  groupA.add(body);
+  const speaker = new THREE.Mesh(new THREE.CircleGeometry(0.34, 24), matteMat(0x2a2f38));
+  speaker.position.set(-0.35, -0.15, 0.48);
+  groupA.add(speaker);
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.28, 16), matteMat(DARK));
+  neck.position.y = 0.95;
+  groupA.add(neck);
+  const head = new THREE.Mesh(new THREE.BoxGeometry(1.25, 1.05, 0.85), matteMat(FOAM));
+  head.position.y = 1.55;
+  groupA.add(head);
+  for(let i=-1;i<=1;i++){
+    const eye = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.28, 0.06), emissiveMat(CYAN, 1.8));
+    eye.position.set(i*0.36, 1.6, 0.44);
+    groupA.add(eye);
+  }
+  const mouth = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.02, 8, 24, Math.PI), matteMat(0x1a1e26));
+  mouth.rotation.z = Math.PI;
+  mouth.position.set(0, 1.28, 0.44);
+  groupA.add(mouth);
+
+  const shoulderR = new THREE.Group();
+  shoulderR.position.set(0.95, 0.55, 0);
+  const upperArmR = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.22, 0.22), matteMat(FOAM));
+  upperArmR.position.set(0.3, 0, 0);
+  shoulderR.add(upperArmR);
+  const foreArmR = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.2, 0.2), matteMat(FOAM));
+  foreArmR.position.set(0.85, 0.35, 0);
+  foreArmR.rotation.z = Math.PI/2.4;
+  shoulderR.add(foreArmR);
+  shoulderR.rotation.z = 0.5;
+  groupA.add(shoulderR);
+
+  const armL = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.22, 0.22), matteMat(FOAM));
+  armL.position.set(-1.05, 0.35, 0);
+  armL.rotation.z = -0.35;
+  groupA.add(armL);
+
+  for(let i=0;i<2;i++){
+    const btn = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,0.04,16), emissiveMat(RED,1.2));
+    btn.rotation.x = Math.PI/2;
+    btn.position.set(0.45, 0.15 - i*0.28, -0.48);
+    groupA.add(btn);
+  }
+  scene.add(groupA);
+
+  const groupB = new THREE.Group();
+  const baseB = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.68, 0.28, 32), matteMat(DARKER));
+  baseB.position.y = -0.55;
+  groupB.add(baseB);
+  const trimB = new THREE.Mesh(new THREE.TorusGeometry(0.63, 0.02, 8, 32), emissiveMat(RED, 1.2));
+  trimB.rotation.x = Math.PI/2;
+  trimB.position.y = -0.68;
+  groupB.add(trimB);
+  const neckB = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.13, 0.35, 16), matteMat(0x1a1f29));
+  neckB.position.y = -0.2;
+  groupB.add(neckB);
+  const jointB = new THREE.Mesh(new THREE.SphereGeometry(0.16, 16, 16), matteMat(0x20262f));
+  jointB.position.y = 0.02;
+  groupB.add(jointB);
+  const headB = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.95, 0.95), matteMat(DARK));
+  headB.position.y = 0.55;
+  groupB.add(headB);
+  [-0.3, 0.3].forEach((x)=>{
+    const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.42), matteMat(0x05070a));
+    screen.position.set(x, 0.55, 0.481);
+    groupB.add(screen);
+    for(let r=0;r<3;r++){
+      for(let c=0;c<3;c++){
+        const px = new THREE.Mesh(new THREE.PlaneGeometry(0.06,0.06), emissiveMat(CYAN, 2.2));
+        px.position.set(x - 0.1 + c*0.1, 0.68 - r*0.1, 0.485);
+        groupB.add(px);
+      }
+    }
+  });
+  [-0.62, 0.62].forEach((x)=>{
+    const ear = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 16), emissiveMat(RED, 1.4));
+    ear.position.set(x, 0.55, 0);
+    groupB.add(ear);
+  });
+  groupB.visible = false;
+  scene.add(groupB);
+
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 0.3, 0);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 1.4;
+  controls.minDistance = 2.6;
+  controls.maxDistance = 8;
+  controls.enablePan = false;
+  controls.update();
+
+  let idleTimer = null;
+  controls.addEventListener('start', ()=>{ controls.autoRotate = false; clearTimeout(idleTimer); });
+  controls.addEventListener('end', ()=>{ idleTimer = setTimeout(()=>{ controls.autoRotate = true; }, 2600); });
+
+  document.querySelectorAll('.rev-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.rev-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const rev = btn.dataset.rev;
+      groupA.visible = rev === 'a';
+      groupB.visible = rev === 'b';
+      controls.target.set(0, rev === 'a' ? 0.3 : 0.1, 0);
+    });
+  });
+
+  function resize(){
+    const w = mount.clientWidth, h = mount.clientHeight;
+    camera.aspect = (w||1) / (h||1);
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  }
+  window.addEventListener('resize', resize);
+  new ResizeObserver(resize).observe(mount);
+
+  let t = 0;
+  function animate(){
+    requestAnimationFrame(animate);
+    t += 0.016;
+    if(groupA.visible) shoulderR.rotation.z = 0.5 + Math.sin(t*1.6)*0.18;
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  if(loadingEl) loadingEl.style.opacity = '0';
+  animate();
+})();
+</script><script src="projects.js"></script><script src="site.js"></script></body></html>
