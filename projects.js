@@ -9,5 +9,5 @@ window.FAZWA_PROJECTS=[
 {id:'weblab',n:'07',code:'FAZWA WEB LAB',orig:'Website Build',tag:'Web Development & Digital Projects',cat:'WEB DEVELOPMENT',status:'complete',page:'project.html?p=weblab'},
 {id:'welcomebot',n:'08',code:'WELCOMEBOT',orig:'Welcome Robo for Expo',tag:'Interactive Exhibition Welcome Robot',cat:'EXHIBITION ROBOT',status:'complete',page:'welcome-robot.html'},
 {id:'eipguard',n:'09',code:'EIP GUARD',orig:'Accident Identification (Innovation)',tag:'Accident Identification Innovation',cat:'SAFETY INNOVATION',status:'complete',page:'project.html?p=eipguard'},
-{id:'pixelclimb',n:'10',code:'PIXEL CLIMB',orig:'Hill Climb OLED Game',tag:'NodeMCU OLED Racing Game',cat:'OLED GAME',status:'ongoing',page:'project.html?p=pixelclimb'}
+{id:'pixelclimb',n:'10',code:'PIXEL CLIMB',orig:'Hill Climb OLED Game',tag:'NodeMCU OLED Racing Game',cat:'OLED GAME',status:'ongoing',page:'pixel-climb.html'}
 ];
